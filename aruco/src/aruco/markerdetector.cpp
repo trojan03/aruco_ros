@@ -192,6 +192,7 @@ namespace aruco
       if (_enableCylinderWarp)
         resW=warp_cylinder( grey,canonicalMarker,Size ( _markerWarpSize,_markerWarpSize ),MarkerCanditates[i] );
       else  resW=warp ( grey,canonicalMarker,Size ( _markerWarpSize,_markerWarpSize ),MarkerCanditates[i] );
+
       if (resW) {
         int nRotations;
         int id= ( *markerIdDetector_ptrfunc ) ( canonicalMarker,nRotations );

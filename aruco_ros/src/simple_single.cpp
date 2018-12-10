@@ -131,12 +131,10 @@ public:
     nh.param<std::string>("camera_frame", camera_frame, "");
     nh.param<std::string>("marker_frame", marker_frame, "");
     nh.param<bool>("image_is_rectified", useRectifiedImages, true);
-
     ROS_ASSERT(camera_frame != "" && marker_frame != "");
 
     if ( reference_frame.empty() )
       reference_frame = camera_frame;
-
     ROS_INFO("Aruco node started with marker size of %f m and marker id to track: %d",
              marker_size, marker_id);
     ROS_INFO("Aruco node will publish pose to TF with %s as parent and %s as child.",
@@ -204,7 +202,6 @@ public:
       {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
         inImage = cv_ptr->image;
-
         //detection results will go into "markers"
         markers.clear();
         //Ok, let's detect
@@ -212,28 +209,30 @@ public:
         //for each marker, draw info and its boundaries in the image
         for(size_t i=0; i<markers.size(); ++i)
         {
-          // only publishing the selected marker
-          if(markers[i].id == marker_id)
-          {
             tf::Transform transform = aruco_ros::arucoMarker2Tf(markers[i]);
             tf::StampedTransform cameraToReference;
             cameraToReference.setIdentity();
 
             if ( reference_frame != camera_frame )
             {
-              getTransform(reference_frame,
-                           camera_frame,
-                           cameraToReference);
+                getTransform(reference_frame,
+                             camera_frame,
+                             cameraToReference);
             }
 
-            transform = 
-              static_cast<tf::Transform>(cameraToReference) 
-              * static_cast<tf::Transform>(rightToLeft) 
-              * transform;
+            transform =
+                    static_cast<tf::Transform>(cameraToReference)
+                    * static_cast<tf::Transform>(rightToLeft)
+                    * transform;
 
             tf::StampedTransform stampedTransform(transform, curr_stamp,
-                                                  reference_frame, marker_frame);
+                                                  reference_frame, "id" + boost::to_string(markers[i].id));
             br.sendTransform(stampedTransform);
+          // only publishing the selected marker
+          if(markers[i].id == marker_id)
+          {
+
+
             geometry_msgs::PoseStamped poseMsg;
             tf::poseTFToMsg(transform, poseMsg.pose);
             poseMsg.header.frame_id = reference_frame;

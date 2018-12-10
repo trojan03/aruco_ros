@@ -119,7 +119,6 @@ public:
                     tf::StampedTransform& transform)
   {
     std::string errMsg;
-
     if(!tfListener_.waitForTransform(refFrame,
                                      childFrame,
                                      ros::Time(0),
@@ -272,6 +271,7 @@ public:
 
 int main(int argc,char **argv)
 {
+
   ros::init(argc, argv, "aruco_marker_publisher");
 
   ArucoMarkerPublisher node;

@@ -40,6 +40,11 @@ add_executable(single src/simple_single.cpp
 add_dependencies(single ${PROJECT_NAME}_gencfg)
 target_link_libraries(single ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
+add_executable(multi src/simple_multi.cpp
+                      src/aruco_ros_utils.cpp)
+add_dependencies(multi ${PROJECT_NAME}_gencfg)
+target_link_libraries(multi ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 add_executable(double src/simple_double.cpp
                       src/aruco_ros_utils.cpp)
 add_dependencies(double ${PROJECT_NAME}_gencfg)
