@@ -217,25 +217,23 @@ public:
               pixelMsg.point.y = markers[i].getCenter().y;
               pixelMsg.point.z = 0;
               pixel_pub.publish(pixelMsg);
-
-              //Publish rviz marker representing the ArUco marker patch
-              visualization_msgs::Marker visMarker;
-              visMarker.header = transformMsg.header;
-              visMarker.id = 1;
-              visMarker.type   = visualization_msgs::Marker::CUBE;
-              visMarker.action = visualization_msgs::Marker::ADD;
-              visMarker.pose = poseMsg.pose;
-              visMarker.scale.x = marker_size;
-              visMarker.scale.y = 0.001;
-              visMarker.scale.z = marker_size;
-              visMarker.color.r = 1.0;
-              visMarker.color.g = 0;
-              visMarker.color.b = 0;
-              visMarker.color.a = 1.0;
-              visMarker.lifetime = ros::Duration(3.0);
-              marker_pub.publish(visMarker);
-
             }
+            //Publish rviz marker representing the ArUco marker patch
+            visualization_msgs::Marker visMarker;
+            visMarker.header = transformMsg.header;
+            visMarker.id = markers[i].id;
+            visMarker.type   = visualization_msgs::Marker::CUBE;
+            visMarker.action = visualization_msgs::Marker::ADD;
+            visMarker.pose = poseMsg.pose;
+            visMarker.scale.x = marker_size;
+            visMarker.scale.y = 0.001;
+            visMarker.scale.z = marker_size;
+            visMarker.color.r = 1.0;
+            visMarker.color.g = 0;
+            visMarker.color.b = 0;
+            visMarker.color.a = 1.0;
+            visMarker.lifetime = ros::Duration(3.0);
+            marker_pub.publish(visMarker);
             // but drawing all the detected markers
             markers[i].draw(inImage,cv::Scalar(0,0,255),2);
           }
@@ -315,3 +313,4 @@ int main(int argc,char **argv)
 
   ros::spin();
 }
+
